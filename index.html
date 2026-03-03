@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Modern mobile app for booking golf tee times"
+    />
+    <title>TeeFlow | Golf Tee Time Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-badge">GP</span>
+          <div class="brand-copy">
+            <p>Golf Pro</p>
+            <small>Tee Time Booking</small>
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="icon-btn" aria-label="Notifications">🔔</button>
+          <button class="avatar-btn" aria-label="Profile">
+            <span>AR</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <section class="screen active" data-screen="home">
+          <article class="hero-card">
+            <div class="hero-copy">
+              <p class="eyebrow">Dashboard</p>
+              <h1>Swing Mastery</h1>
+              <p>
+                Discover top courses, book your ideal slot, and join transparent
+                skill-matched groups.
+              </p>
+              <div class="hero-actions">
+                <button class="btn btn-primary" data-action="find-tee-times">
+                  Book tee time
+                </button>
+                <button class="btn btn-ghost" data-action="open-profile">
+                  Complete profile
+                </button>
+              </div>
+            </div>
+            <div class="practice-card">
+              <div class="practice-head">
+                <h3>Practice time</h3>
+                <span>Weekdays</span>
+              </div>
+              <div class="practice-bars">
+                <span>1h</span>
+                <span>2h</span>
+                <span>3h</span>
+                <span class="active">4h</span>
+                <span>5h</span>
+              </div>
+              <div class="day-tags">
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span class="active">Thu</span>
+                <span>Fri</span>
+              </div>
+            </div>
+          </article>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Game bookings</h2>
+              <button class="link-btn" data-action="find-tee-times">
+                See more
+              </button>
+            </div>
+            <div id="upcomingList" class="stack"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Recommended courses</h2>
+              <span class="meta">Based on your profile</span>
+            </div>
+            <div id="recommendedList" class="horizontal-scroll"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Loyalty & flexibility</h2>
+            </div>
+            <div class="stats-grid">
+              <article>
+                <p>Points balance</p>
+                <h3 id="pointsBalanceHome">1,240 pts</h3>
+              </article>
+              <article>
+                <p>Private access</p>
+                <h3>1-time trial available</h3>
+              </article>
+              <article>
+                <p>Cancel policy</p>
+                <h3>24h free • 1h with points</h3>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="screen" data-screen="search">
+          <header class="screen-header">
+            <h2>Search tee times</h2>
+            <button id="toggleFilters" class="chip-btn">Filters</button>
+          </header>
+
+          <div class="search-row">
+            <input
+              id="courseSearch"
+              type="search"
+              placeholder="Search courses, city, or facilities"
+            />
+          </div>
+
+          <section id="filterPanel" class="panel filters-panel hidden">
+            <div class="field">
+              <label for="priceRange"
+                >Max price per player
+                <strong id="priceValue">$140</strong></label
+              >
+              <input id="priceRange" type="range" min="40" max="220" step="5" />
+            </div>
+
+            <div class="field">
+              <label for="distanceRange"
+                >Distance
+                <strong id="distanceValue">20 miles</strong></label
+              >
+              <input
+                id="distanceRange"
+                type="range"
+                min="1"
+                max="60"
+                step="1"
+              />
+            </div>
+
+            <div class="field">
+              <label>Preferred time of day</label>
+              <div class="segment">
+                <button class="segment-btn active" data-time="Any">Any</button>
+                <button class="segment-btn" data-time="Morning">Morning</button>
+                <button class="segment-btn" data-time="Afternoon">
+                  Afternoon
+                </button>
+                <button class="segment-btn" data-time="Evening">Evening</button>
+              </div>
+            </div>
+
+            <div class="field grid-two">
+              <label>
+                Group preference
+                <select id="groupPreference">
+                  <option value="Any">Any</option>
+                  <option value="Solo">Solo</option>
+                  <option value="Join Group">Join Group</option>
+                  <option value="Flexible">Flexible</option>
+                </select>
+              </label>
+              <label>
+                Sort by
+                <select id="sortBy">
+                  <option value="recommended">Recommended</option>
+                  <option value="price">Price low-high</option>
+                  <option value="distance">Closest first</option>
+                  <option value="rating">Highest rated</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="checkbox-row">
+              <input type="checkbox" id="handicapMatch" />
+              <span>Enable handicap matching</span>
+            </label>
+          </section>
+
+          <div class="view-toggle">
+            <button class="view-btn active" data-view="list">List view</button>
+            <button class="view-btn" data-view="map">Map view</button>
+          </div>
+
+          <section id="mapView" class="panel hidden">
+            <h3>Nearby courses</h3>
+            <p class="meta">Map-style preview sorted by your filters</p>
+            <div id="mapMarkers" class="map-markers"></div>
+          </section>
+
+          <section id="courseList" class="stack"></section>
+        </section>
+
+        <section class="screen" data-screen="checkout">
+          <header class="screen-header">
+            <h2>Checkout</h2>
+          </header>
+
+          <section id="emptyCheckout" class="panel empty-state">
+            <h3>No tee time selected</h3>
+            <p>Select a tee time from Search to see details and checkout.</p>
+            <button class="btn btn-primary" data-action="find-tee-times">
+              Browse tee times
+            </button>
+          </section>
+
+          <div id="checkoutContent" class="hidden">
+            <section class="panel" id="selectedSlotSummary"></section>
+
+            <section class="panel">
+              <h3>Players & discounts</h3>
+              <div class="counter-row">
+                <p>Number of players booked</p>
+                <div class="counter">
+                  <button id="decreasePlayers" class="small-btn">−</button>
+                  <strong id="playersCount">2</strong>
+                  <button id="increasePlayers" class="small-btn">+</button>
+                </div>
+              </div>
+              <label class="checkbox-row">
+                <input type="checkbox" id="usePoints" />
+                <span>Redeem 300 loyalty points (up to $15)</span>
+              </label>
+              <div id="priceBreakdown" class="price-breakdown"></div>
+            </section>
+
+            <section class="panel">
+              <h3>Payment method</h3>
+              <div class="payment-grid">
+                <button class="payment-option active" data-pay="Apple Pay">
+                  Apple Pay
+                </button>
+                <button class="payment-option" data-pay="Google Pay">
+                  Google Pay
+                </button>
+                <button class="payment-option" data-pay="Visa •••• 9421">
+                  Visa •••• 9421
+                </button>
+                <button class="payment-option" data-pay="Mastercard •••• 1222">
+                  Mastercard •••• 1222
+                </button>
+              </div>
+            </section>
+
+            <section class="panel">
+              <h3>Cancellation rules</h3>
+              <ul class="policy-list">
+                <li>Cancel 24 hours in advance for no extra charge.</li>
+                <li>Cancel up to 1 hour before tee time with loyalty points.</li>
+                <li>Private courses include a one-time trial access badge.</li>
+              </ul>
+            </section>
+
+            <button id="confirmBooking" class="btn btn-primary btn-block">
+              Confirm booking
+            </button>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="bookings">
+          <header class="screen-header">
+            <h2>Your bookings</h2>
+          </header>
+          <section id="bookingCards" class="stack"></section>
+        </section>
+
+        <section class="screen" data-screen="profile">
+          <header class="screen-header">
+            <h2>Profile & preferences</h2>
+          </header>
+
+          <form id="profileForm" class="stack">
+            <section class="panel">
+              <h3>Account setup</h3>
+              <div class="grid-two">
+                <label>
+                  First name
+                  <input name="firstName" required placeholder="Alex" />
+                </label>
+                <label>
+                  Last name
+                  <input name="lastName" required placeholder="Rivera" />
+                </label>
+              </div>
+              <label>
+                Email address
+                <input name="email" type="email" required placeholder="you@email.com" />
+              </label>
+              <label>
+                Phone number
+                <input name="phone" type="tel" placeholder="+1 (555) 555-0120" />
+              </label>
+              <label>
+                Password
+                <input name="password" type="password" placeholder="••••••••" />
+              </label>
+              <label>
+                Profile picture URL (optional)
+                <input
+                  name="photo"
+                  type="url"
+                  placeholder="https://your-image-url.com/photo.jpg"
+                />
+              </label>
+            </section>
+
+            <section class="panel">
+              <h3>Player profile</h3>
+              <div class="grid-two">
+                <label>
+                  Handicap index
+                  <input name="handicap" type="number" step="0.1" placeholder="12.4" />
+                </label>
+                <label>
+                  Skill level
+                  <select name="skill">
+                    <option>Beginner</option>
+                    <option selected>Intermediate</option>
+                    <option>Competitive</option>
+                  </select>
+                </label>
+              </div>
+              <div class="grid-two">
+                <label>
+                  Preferred play style
+                  <select name="playStyle">
+                    <option>Solo</option>
+                    <option>Group</option>
+                    <option selected>Flexible</option>
+                  </select>
+                </label>
+                <label>
+                  Age (optional)
+                  <input name="age" type="number" min="12" placeholder="31" />
+                </label>
+              </div>
+              <label>
+                Gender (optional)
+                <select name="gender">
+                  <option value="">Prefer not to say</option>
+                  <option>Female</option>
+                  <option>Male</option>
+                  <option>Non-binary</option>
+                </select>
+              </label>
+            </section>
+
+            <section class="panel">
+              <h3>Payment information</h3>
+              <label>
+                Credit or debit card
+                <input name="card" placeholder="4242 4242 4242 4242" />
+              </label>
+              <label>
+                Billing address
+                <input
+                  name="billingAddress"
+                  placeholder="145 Greenview Ave, San Diego, CA"
+                />
+              </label>
+              <label>
+                Saved methods
+                <select name="savedMethod">
+                  <option>Apple Pay</option>
+                  <option>Google Pay</option>
+                  <option>Visa •••• 9421</option>
+                </select>
+              </label>
+            </section>
+
+            <section class="panel">
+              <h3>Social & notifications</h3>
+              <label class="checkbox-row">
+                <input type="checkbox" name="emailNotif" checked />
+                <span>Email confirmations</span>
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" name="textNotif" checked />
+                <span>Text alerts for booking updates</span>
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" name="groupTransparency" checked />
+                <span>Show age, gender, and handicap in group listings</span>
+              </label>
+
+              <div class="friends-box">
+                <div class="friends-head">
+                  <h4>Friends list + invite</h4>
+                  <button class="chip-btn" type="button" id="inviteFriend">
+                    Invite
+                  </button>
+                </div>
+                <div class="friends-list">
+                  <span>Jules Kim (HCP 10)</span>
+                  <span>David Geidt (HCP 14)</span>
+                  <span>Sofia West (HCP 18)</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <h3>Advanced personalization data</h3>
+              <div class="stats-grid">
+                <article>
+                  <p>Most played course</p>
+                  <h3>Main Golf Course</h3>
+                </article>
+                <article>
+                  <p>Preferred time/day</p>
+                  <h3>Thu, 8:00-11:00 AM</h3>
+                </article>
+                <article>
+                  <p>Average spend</p>
+                  <h3>$94 / booking</h3>
+                </article>
+              </div>
+            </section>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Save profile
+            </button>
+          </form>
+        </section>
+      </main>
+
+      <nav class="tab-bar">
+        <button class="tab-btn active" data-tab="home">
+          <span>🏠</span>
+          <small>Home</small>
+        </button>
+        <button class="tab-btn" data-tab="search">
+          <span>🔎</span>
+          <small>Search</small>
+        </button>
+        <button class="tab-btn" data-tab="checkout">
+          <span>💳</span>
+          <small>Checkout</small>
+        </button>
+        <button class="tab-btn" data-tab="bookings">
+          <span>📅</span>
+          <small>Bookings</small>
+        </button>
+        <button class="tab-btn" data-tab="profile">
+          <span>👤</span>
+          <small>Profile</small>
+        </button>
+      </nav>
+    </div>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
